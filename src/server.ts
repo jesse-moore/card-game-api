@@ -3,6 +3,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import { apolloServer } from './apollo';
 import { getConnection } from './mysql';
 import { config } from './config';
+require('./game');
 
 async function startApolloServer() {
     await apolloServer.start();
