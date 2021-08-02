@@ -1,24 +1,33 @@
-import { Card } from './Card';
+import { ICard } from './Card';
 
 export class Player {
     id: string;
-    cards: Card[];
+    cards: ICard[];
     count: number;
-    status: 0 | 1 | 2 | 3 | 4;
     // 0: playing, 1: played, 2: natural, 3: black jack, 4: bust
-    constructor({ id }: { id: string }) {
+    status: 0 | 1 | 2 | 3 | 4;
+    winLose: number;
+    cash: number;
+    constructor({ id, cash = 0 }: { id: string; cash: number }) {
         this.id = id;
         this.cards = [];
         this.count = 0;
         this.status = 0;
+        this.winLose = 0;
+        this.cash = cash;
     }
     updateStatus() {
-        let hasAce = false;
+        let aces = 0;
         this.count = this.cards.reduce((a, c) => {
-            if (c.value === 11) hasAce = true;
-            return a + c.value;
+            if (c.number === 11) aces++;
+            return a + c.number;
         }, 0);
-        if (this.count > 21 && hasAce) this.count -= 10;
+        if (this.count > 21 && aces > 0) {
+            while (this.count > 21 && aces > 0) {
+                this.count -= 10;
+                aces--;
+            }
+        }
         if (this.cards.length === 2 && this.count === 21) {
             this.status = 2;
         } else if (this.count === 21) {
@@ -27,7 +36,7 @@ export class Player {
             this.status = 4;
         }
     }
-    addCard(cards: Card[]) {
+    addCard(cards: ICard[]) {
         this.cards = [...this.cards, ...cards];
         this.updateStatus();
     }
@@ -43,5 +52,6 @@ export class Player {
         this.cards = [];
         this.count = 0;
         this.status = 0;
+        this.winLose = 0;
     }
 }

@@ -10,8 +10,8 @@ export const typeDefs = gql`
 
     type Card {
         suit: String!
-        value: Int!
-        symbol: String!
+        number: Int!
+        faceCard: String
     }
 
     type Player {
@@ -19,6 +19,8 @@ export const typeDefs = gql`
         cards: [Card]!
         count: Int!
         status: Int!
+        winLose: Int!
+        cash: Int!
     }
 
     type GameStatus {
@@ -28,27 +30,27 @@ export const typeDefs = gql`
         isStarted: Boolean!
         isWaiting: Boolean!
         isFinished: Boolean!
+        reshuffled: Boolean!
     }
 
     type User {
-        id: ID
-        email: String!
+        id: ID!
+        cash: Int!
     }
 
     type Query {
         test: String
         status(id: String): String
+        getUser: User!
     }
 
     type Mutation {
-        createUser: User
-        newGame(playerId: String!): GameStatus!
-        startNewRound(id: String!, playerId: String!): GameStatus!
-        removeGame(id: String!, playerId: String!): String
-        gameAction(id: String!, playerId: String!, action: Action!): GameStatus!
+        createUser: String
+        newGame(playerId: String, bet: Int!): GameStatus!
+        startNewRound(id: String!, playerId: String, bet: Int!): GameStatus!
+        removeGame(id: String!, playerId: String): String
+        gameAction(id: String!, playerId: String, action: String!): GameStatus!
         test: String
-    }
-    type Subscription {
-        test: String
+        restoreBalance(id: String!, playerId: String): Int!
     }
 `;

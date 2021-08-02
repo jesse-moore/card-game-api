@@ -53,7 +53,7 @@ export async function getConnection(name = 'default'): Promise<Connection> {
         }
 
         if (process.env.NODE_ENV !== 'production') {
-            await updateConnectionEntities(connection, [User, Event]);
+            await updateConnectionEntities(connection, [User]);
         }
 
         return connection;

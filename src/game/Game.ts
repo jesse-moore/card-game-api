@@ -1,14 +1,7 @@
 import { nanoid } from 'nanoid';
-import { Card } from './Card';
+import { Card, ICard } from './Card';
 import { Player } from './Player';
-
-interface GameStatus {
-    dealer: Player;
-    player: Player;
-    isStarted: boolean;
-    isWaiting: boolean;
-    isFinished: boolean;
-}
+import { testDeck } from './testDeck';
 
 export class Game {
     id: string;
@@ -18,15 +11,18 @@ export class Game {
     isFinished: boolean;
     dealer: Player;
     player: Player;
-    shoe: Card[];
-    spentCards: Card[];
+    bet: number;
+    shoe: ICard[];
+    spentCards: ICard[];
+    reshuffled: boolean;
     reshuffleLimit: number;
     reshuffleCount: number;
-    constructor({ playerId }: { playerId: string }) {
+    lastUpdate: Date;
+    constructor(player: Player) {
         this.id = nanoid();
         this.numberOfDecks = 1;
-        this.dealer = new Player({ id: 'dealer' });
-        this.player = new Player({ id: playerId });
+        this.dealer = new Player({ id: 'dealer', cash: 0 });
+        this.player = player;
         this.shoe = [];
         this.spentCards = [];
         this.reshuffleLimit = 0.75;
@@ -34,24 +30,31 @@ export class Game {
         this.isStarted = false;
         this.isWaiting = false;
         this.isFinished = false;
+        this.bet = 0;
+        this.reshuffled = false;
+        this.lastUpdate = new Date();
         this.buildGame();
     }
     buildGame() {
         this.shoe = this.buildDeck();
         this.shuffleDeck();
+        // this.shoe = testDeck;
     }
     buildDeck() {
         const deck = [];
-        const suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
+        const suits = ['club', 'spade', 'diamond', 'heart'];
         for (let i = 0; i < this.numberOfDecks; i++) {
             for (var suit of suits) {
-                for (let value = 2; value < 11; value++) {
-                    deck.push(new Card({ suit, value, symbol: String(value) }));
+                for (let i = 2; i < 11; i++) {
+                    const number = i;
+                    deck.push(new Card({ suit, number }));
                 }
-                for (let symbol of ['J', 'Q', 'K']) {
-                    deck.push(new Card({ suit, value: 10, symbol }));
+                for (let face of ['jack', 'queen', 'king']) {
+                    const faceCard = face;
+                    deck.push(new Card({ suit, faceCard, number: 10 }));
                 }
-                deck.push(new Card({ suit, value: 11, symbol: 'A' }));
+                const faceCard = 'ace';
+                deck.push(new Card({ suit, faceCard, number: 11 }));
             }
         }
         return deck;
@@ -68,44 +71,43 @@ export class Game {
         const { hideSecondCard = false } = options;
         if (hideSecondCard) {
             return {
-                status: this.dealer.status,
+                ...this.dealer,
                 cards: [this.dealer.cards[0]],
-                count: this.dealer.cards[0].value,
-                id: this.dealer.id,
+                count: this.dealer.cards[0].number,
             };
         } else {
-            return {
-                status: this.dealer.status,
-                cards: this.dealer.cards,
-                count: this.dealer.count,
-                id: this.dealer.id,
-            };
+            return this.dealer;
         }
     }
     getPlayer() {
         return {
+            ...this.player,
             status: this.player.status,
             cards: this.player.cards,
             count: this.player.count,
             id: this.player.id,
         };
     }
-    startNextRound() {
+    startNextRound(bet: number) {
         if (!this.isFinished) throw new Error('Game not finished');
+        this.bet = bet;
         this.player.reset();
         this.dealer.reset();
         return this.startRound();
     }
-    startGame() {
+    startGame(bet: number) {
         if (this.isStarted) throw new Error('Game already started');
+        this.bet = bet;
         this.isStarted = true;
         return this.startRound();
     }
     startRound() {
+        this.lastUpdate = new Date();
         this.player.addCard(this.dealCard(2));
         this.dealer.addCard(this.dealCard(2));
         this.isFinished = false;
         this.isWaiting = true;
+        this.reshuffled = false;
         this.updateGameStatus();
         return this.getGameStatus();
     }
@@ -122,6 +124,7 @@ export class Game {
             isWaiting: this.isWaiting,
             isFinished: this.isFinished,
             dealer: this.getDealer({ hideSecondCard: true }),
+            reshuffled: this.reshuffled,
         };
         if (this.player.status > 0 || this.isFinished) {
             status.dealer = this.getDealer();
@@ -141,6 +144,7 @@ export class Game {
     action({ action }: { action: string }) {
         if (!this.isWaiting || this.isFinished)
             throw new Error('Cannot perform this action');
+        this.lastUpdate = new Date();
         const player = this.player;
         switch (action) {
             case 'hit':
@@ -175,6 +179,22 @@ export class Game {
             this.shoe = [...this.shoe, ...this.spentCards];
             this.spentCards = [];
             this.shuffleDeck();
+            this.reshuffled = true;
+        }
+        this.checkGameResult();
+    }
+    checkGameResult() {
+        const { player, dealer } = this;
+        if (player.status === 4) {
+            this.player.winLose = 1;
+        } else if (dealer.status === 4) {
+            this.player.winLose = 2;
+        } else if (dealer.count > player.count) {
+            this.player.winLose = 1;
+        } else if (dealer.count === player.count) {
+            this.player.winLose = 3;
+        } else {
+            this.player.winLose = 2;
         }
     }
 }

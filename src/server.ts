@@ -3,6 +3,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import { apolloServer } from './apollo';
 import { getConnection } from './mysql';
 import { config } from './config';
+import { controller } from './game';
 require('./game');
 
 async function startApolloServer() {
@@ -23,5 +24,7 @@ async function startApolloServer() {
     );
     return { apolloServer, app };
 }
+
+setInterval(() => controller.cleanupGames(), 3000);
 
 startApolloServer();

@@ -23,8 +23,8 @@ export enum Action {
 export type Card = {
   __typename?: 'Card';
   suit: Scalars['String'];
-  value: Scalars['Int'];
-  symbol: Scalars['String'];
+  number: Scalars['Int'];
+  faceCard?: Maybe<Scalars['String']>;
 };
 
 export type GameStatus = {
@@ -35,40 +35,50 @@ export type GameStatus = {
   isStarted: Scalars['Boolean'];
   isWaiting: Scalars['Boolean'];
   isFinished: Scalars['Boolean'];
+  reshuffled: Scalars['Boolean'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createUser?: Maybe<User>;
+  createUser?: Maybe<Scalars['String']>;
   newGame: GameStatus;
   startNewRound: GameStatus;
   removeGame?: Maybe<Scalars['String']>;
   gameAction: GameStatus;
   test?: Maybe<Scalars['String']>;
+  restoreBalance: Scalars['Int'];
 };
 
 
 export type MutationNewGameArgs = {
-  playerId: Scalars['String'];
+  playerId?: Maybe<Scalars['String']>;
+  bet: Scalars['Int'];
 };
 
 
 export type MutationStartNewRoundArgs = {
   id: Scalars['String'];
-  playerId: Scalars['String'];
+  playerId?: Maybe<Scalars['String']>;
+  bet: Scalars['Int'];
 };
 
 
 export type MutationRemoveGameArgs = {
   id: Scalars['String'];
-  playerId: Scalars['String'];
+  playerId?: Maybe<Scalars['String']>;
 };
 
 
 export type MutationGameActionArgs = {
   id: Scalars['String'];
-  playerId: Scalars['String'];
-  action: Action;
+  playerId?: Maybe<Scalars['String']>;
+  action: Scalars['String'];
+};
+
+
+export type MutationRestoreBalanceArgs = {
+  id: Scalars['String'];
+  playerId?: Maybe<Scalars['String']>;
 };
 
 export type Player = {
@@ -77,12 +87,15 @@ export type Player = {
   cards: Array<Maybe<Card>>;
   count: Scalars['Int'];
   status: Scalars['Int'];
+  winLose: Scalars['Int'];
+  cash: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
   test?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
+  getUser: User;
 };
 
 
@@ -90,16 +103,11 @@ export type QueryStatusArgs = {
   id?: Maybe<Scalars['String']>;
 };
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  test?: Maybe<Scalars['String']>;
-};
-
 
 export type User = {
   __typename?: 'User';
-  id?: Maybe<Scalars['ID']>;
-  email: Scalars['String'];
+  id: Scalars['ID'];
+  cash: Scalars['Int'];
 };
 
 
@@ -194,7 +202,6 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Player: ResolverTypeWrapper<Player>;
   Query: ResolverTypeWrapper<{}>;
-  Subscription: ResolverTypeWrapper<{}>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -210,7 +217,6 @@ export type ResolversParentTypes = {
   Mutation: {};
   Player: Player;
   Query: {};
-  Subscription: {};
   Upload: Scalars['Upload'];
   User: User;
   ID: Scalars['ID'];
@@ -218,8 +224,8 @@ export type ResolversParentTypes = {
 
 export type CardResolvers<ContextType = any, ParentType extends ResolversParentTypes['Card'] = ResolversParentTypes['Card']> = {
   suit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  symbol?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  number?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  faceCard?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -230,16 +236,18 @@ export type GameStatusResolvers<ContextType = any, ParentType extends ResolversP
   isStarted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isWaiting?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isFinished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  reshuffled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  newGame?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationNewGameArgs, 'playerId'>>;
-  startNewRound?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationStartNewRoundArgs, 'id' | 'playerId'>>;
-  removeGame?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationRemoveGameArgs, 'id' | 'playerId'>>;
-  gameAction?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationGameActionArgs, 'id' | 'playerId' | 'action'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  newGame?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationNewGameArgs, 'bet'>>;
+  startNewRound?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationStartNewRoundArgs, 'id' | 'bet'>>;
+  removeGame?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationRemoveGameArgs, 'id'>>;
+  gameAction?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationGameActionArgs, 'id' | 'action'>>;
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  restoreBalance?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationRestoreBalanceArgs, 'id'>>;
 };
 
 export type PlayerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Player'] = ResolversParentTypes['Player']> = {
@@ -247,16 +255,15 @@ export type PlayerResolvers<ContextType = any, ParentType extends ResolversParen
   cards?: Resolver<Array<Maybe<ResolversTypes['Card']>>, ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  winLose?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  cash?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryStatusArgs, never>>;
-};
-
-export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  test?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "test", ParentType, ContextType>;
+  getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -264,8 +271,8 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 }
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  cash?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -275,7 +282,6 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Player?: PlayerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Subscription?: SubscriptionResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

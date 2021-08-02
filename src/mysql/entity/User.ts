@@ -1,19 +1,18 @@
-import { Entity, Column, Unique, OneToMany } from 'typeorm';
+import { Entity, Column, Unique } from 'typeorm';
 import { Model } from './Model';
-import { IsEmail, IsUUID } from 'class-validator';
+import { IsUUID } from 'class-validator';
 
 @Entity()
-@Unique(['id', 'email'])
+@Unique(['id'])
 export class User extends Model {
-    constructor(email: string, id: string) {
+    constructor(id: string, cash: number) {
         super();
-        this.email = email;
         this.id = id;
+        this.cash = cash;
     }
 
-    @IsEmail()
-    @Column({ type: 'varchar', length: '50' })
-    email!: string;
+    @Column({ type: 'mediumint' })
+    cash!: number;
 
     @IsUUID()
     @Column({ type: 'varchar', length: '50' })

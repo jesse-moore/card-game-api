@@ -1,16 +1,24 @@
-interface ICard {
+export type ICard = {
     suit: string;
-    value: number;
-    symbol: string;
+    number: number;
+    faceCard?: string;
+};
+
+export interface Suit {
+    suit: 'club' | 'diamond' | 'spade' | 'heart';
+}
+
+export interface Face {
+    faceCard: 'king' | 'queen' | 'jack' | 'ace';
 }
 
 export class Card {
+    number: number;
     suit: string;
-    value: number;
-    symbol: string;
-    constructor({ suit, value, symbol }: ICard) {
+    faceCard: string | undefined;
+    constructor({ number, suit, faceCard }: ICard) {
+        this.number = number;
         this.suit = suit;
-        this.value = value;
-        this.symbol = symbol;
+        this.faceCard = faceCard;
     }
 }
