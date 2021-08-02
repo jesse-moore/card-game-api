@@ -1,8 +1,7 @@
-import { validate, ValidationError } from 'class-validator';
+import { validate } from 'class-validator';
 import { getConnection } from './index';
 import { User, Model } from './entity';
-import { ModelValidationErrors, UserInterface } from '../types';
-import { uuid } from 'aws-sdk/clients/customerprofiles';
+import { ModelValidationErrors } from '../types';
 import { ApolloError } from 'apollo-server-express';
 
 export const getUserByID = async (id: string) => {
@@ -10,7 +9,6 @@ export const getUserByID = async (id: string) => {
 };
 
 export const getCash = async (id: string) => {
-	console.log('GET CASH')
     await getConnection();
     const currentUser = await User.findOne(id);
     if (!currentUser) throw new ApolloError('User not found');
@@ -42,7 +40,6 @@ const validateModel = async (
 };
 
 export const updateCash = async (user: { id: string; amount: number }) => {
-    console.log('UPDATE CASH');
     const { id, amount } = user;
     await getConnection();
     const currentUser = await User.findOne(id);
@@ -52,7 +49,6 @@ export const updateCash = async (user: { id: string; amount: number }) => {
 };
 
 export const setCash = async (id: string, amount: number) => {
-    console.log('SET CASH');
     await getConnection();
     const currentUser = await User.findOne(id);
     if (!currentUser) throw new ApolloError('User not found');

@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Card, ICard } from './Card';
 import { Player } from './Player';
-import { testDeck } from './testDeck';
 
 export class Game {
     id: string;
@@ -38,7 +37,6 @@ export class Game {
     buildGame() {
         this.shoe = this.buildDeck();
         this.shuffleDeck();
-        // this.shoe = testDeck;
     }
     buildDeck() {
         const deck = [];

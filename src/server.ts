@@ -25,6 +25,6 @@ async function startApolloServer() {
     return { apolloServer, app };
 }
 
-setInterval(() => controller.cleanupGames(), 3000);
+setInterval(() => controller.cleanupGames(), 90000);
 
 startApolloServer();

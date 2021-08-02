@@ -94,13 +94,13 @@ export type Player = {
 export type Query = {
   __typename?: 'Query';
   test?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
+  status: Status;
   getUser: User;
 };
 
-
-export type QueryStatusArgs = {
-  id?: Maybe<Scalars['String']>;
+export type Status = {
+  __typename?: 'Status';
+  games: Array<Maybe<Scalars['String']>>;
 };
 
 
@@ -202,6 +202,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Player: ResolverTypeWrapper<Player>;
   Query: ResolverTypeWrapper<{}>;
+  Status: ResolverTypeWrapper<Status>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -217,6 +218,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Player: Player;
   Query: {};
+  Status: Status;
   Upload: Scalars['Upload'];
   User: User;
   ID: Scalars['ID'];
@@ -262,8 +264,13 @@ export type PlayerResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryStatusArgs, never>>;
+  status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+};
+
+export type StatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['Status'] = ResolversParentTypes['Status']> = {
+  games?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -282,6 +289,7 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Player?: PlayerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Status?: StatusResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

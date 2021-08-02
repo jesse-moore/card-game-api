@@ -3,6 +3,10 @@ import { gql } from 'apollo-server';
 export const typeDefs = gql`
     scalar Upload
 
+    type Status {
+        games: [String]!
+    }
+
     enum Action {
         hit
         stand
@@ -40,7 +44,7 @@ export const typeDefs = gql`
 
     type Query {
         test: String
-        status(id: String): String
+        status: Status!
         getUser: User!
     }
 

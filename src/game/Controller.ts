@@ -1,5 +1,4 @@
 import { UserInputError, ForbiddenError } from 'apollo-server-express';
-import { nanoid } from 'nanoid';
 import { GameStatus } from '../graphql/generated/graphql-types';
 import { getCash, updateCash } from '../mysql/queries';
 import { Game } from './Game';
@@ -32,11 +31,10 @@ export class Controller {
     }
     async startNewRound(
         id: string,
-        playerId: string,
+        playerId: string, 
         bet: number,
         isGuest: boolean
     ) {
-        console.log('IS GUEST', isGuest);
         const game = this.getGame(id);
         const player = game.getPlayer();
         if (player.id !== playerId) {

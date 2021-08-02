@@ -8,15 +8,12 @@ import { controller } from '../game';
 import { nanoid } from 'nanoid';
 
 const Query: QueryResolvers = {
-    test: (_parent, _args, context: { user: ClaimVerifyResult }, _info) => {
-        console.log(context.user);
+    test: (_parent, _args, _context: { user: ClaimVerifyResult }, _info) => {
         return 'Hello World';
     },
     status: (_parent, _args, _context: { user: ClaimVerifyResult }, _info) => {
-        console.log(controller.games);
-        const l = Object.keys(controller.games);
-        console.log(l);
-        return 'Status';
+        const keys = Object.keys(controller.games);
+        return { games: keys };
     },
     getUser: async (
         _parent,
@@ -27,7 +24,6 @@ const Query: QueryResolvers = {
         const { user } = context;
         if (!user.isValid) return { id: nanoid(), cash: 1000 };
         const userByID = await getUserByID(user.userName);
-        console.log('GET USER BY ID');
         if (!userByID) throw new AuthenticationError('User not found');
         return userByID;
     },
