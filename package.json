@@ -4,8 +4,9 @@
     "description": "Card Game API",
     "main": "build/server.js",
     "scripts": {
+        "start": "NODE_ENV=production node build/server.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "server-watch": "nodemon build/src/server.js",
+        "server-watch": "nodemon build/server.js",
         "tsc-watch": "tsc --watch",
         "codegen": "graphql-codegen --config codegen.yml",
         "codegen-watch": "graphql-codegen --config codegen.yml --watch"
