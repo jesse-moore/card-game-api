@@ -36,6 +36,7 @@ export type GameStatus = {
   isWaiting: Scalars['Boolean'];
   isFinished: Scalars['Boolean'];
   reshuffled: Scalars['Boolean'];
+  bet: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -45,7 +46,6 @@ export type Mutation = {
   startNewRound: GameStatus;
   removeGame?: Maybe<Scalars['String']>;
   gameAction: GameStatus;
-  test?: Maybe<Scalars['String']>;
   restoreBalance: Scalars['Int'];
 };
 
@@ -84,7 +84,7 @@ export type MutationRestoreBalanceArgs = {
 export type Player = {
   __typename?: 'Player';
   id: Scalars['String'];
-  cards: Array<Maybe<Card>>;
+  cards: Array<Card>;
   count: Scalars['Int'];
   status: Scalars['Int'];
   winLose: Scalars['Int'];
@@ -93,7 +93,6 @@ export type Player = {
 
 export type Query = {
   __typename?: 'Query';
-  test?: Maybe<Scalars['String']>;
   status: Status;
   getUser: User;
 };
@@ -239,6 +238,7 @@ export type GameStatusResolvers<ContextType = any, ParentType extends ResolversP
   isWaiting?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isFinished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   reshuffled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  bet?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -248,13 +248,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   startNewRound?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationStartNewRoundArgs, 'id' | 'bet'>>;
   removeGame?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationRemoveGameArgs, 'id'>>;
   gameAction?: Resolver<ResolversTypes['GameStatus'], ParentType, ContextType, RequireFields<MutationGameActionArgs, 'id' | 'action'>>;
-  test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   restoreBalance?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationRestoreBalanceArgs, 'id'>>;
 };
 
 export type PlayerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Player'] = ResolversParentTypes['Player']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  cards?: Resolver<Array<Maybe<ResolversTypes['Card']>>, ParentType, ContextType>;
+  cards?: Resolver<Array<ResolversTypes['Card']>, ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   winLose?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -263,7 +262,6 @@ export type PlayerResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  test?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 };

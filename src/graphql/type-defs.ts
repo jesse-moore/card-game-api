@@ -20,7 +20,7 @@ export const typeDefs = gql`
 
     type Player {
         id: String!
-        cards: [Card]!
+        cards: [Card!]!
         count: Int!
         status: Int!
         winLose: Int!
@@ -35,6 +35,7 @@ export const typeDefs = gql`
         isWaiting: Boolean!
         isFinished: Boolean!
         reshuffled: Boolean!
+        bet: Int!
     }
 
     type User {
@@ -43,7 +44,6 @@ export const typeDefs = gql`
     }
 
     type Query {
-        test: String
         status: Status!
         getUser: User!
     }
@@ -54,7 +54,6 @@ export const typeDefs = gql`
         startNewRound(id: String!, playerId: String, bet: Int!): GameStatus!
         removeGame(id: String!, playerId: String): String
         gameAction(id: String!, playerId: String, action: String!): GameStatus!
-        test: String
         restoreBalance(id: String!, playerId: String): Int!
     }
 `;

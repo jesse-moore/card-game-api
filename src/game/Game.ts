@@ -123,6 +123,7 @@ export class Game {
             isFinished: this.isFinished,
             dealer: this.getDealer({ hideSecondCard: true }),
             reshuffled: this.reshuffled,
+            bet: this.bet,
         };
         if (this.player.status > 0 || this.isFinished) {
             status.dealer = this.getDealer();
