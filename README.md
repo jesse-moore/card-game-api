@@ -51,6 +51,9 @@ Start production server `npm run start`
 
 Deploy to your favorite host
 
+## API Documentation
+[API Docs](https://jesse-moore.github.io/card-game-api/index.html)
+
 #### Created by
 
 Jesse Moore
