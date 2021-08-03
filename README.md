@@ -2,7 +2,7 @@
 
 ## About
 
-This is a graphql api for a blackjack game. It will create a game and perform all the game actions and update the front end with the current game status.
+This is a graphql api for a blackjack game. It will create a game and perform all the game actions to update the front end with the current game status. It will keep track of the users cash balance and if they are authenticated, store that balance in a database. Every 15 minutes the server will remove any games that have been abandoned (not used in the last 30 minutes).
 
 ## Technologies
 
@@ -52,6 +52,7 @@ Start production server `npm run start`
 Deploy to your favorite host
 
 ## API Documentation
+
 [API Docs](https://jesse-moore.github.io/card-game-api/index.html)
 
 #### Created by
