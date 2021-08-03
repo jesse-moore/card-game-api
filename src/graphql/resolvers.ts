@@ -8,9 +8,6 @@ import { controller } from '../game';
 import { nanoid } from 'nanoid';
 
 const Query: QueryResolvers = {
-    test: (_parent, _args, _context: { user: ClaimVerifyResult }, _info) => {
-        return 'Hello World';
-    },
     status: (_parent, _args, _context: { user: ClaimVerifyResult }, _info) => {
         const keys = Object.keys(controller.games);
         return { games: keys };
